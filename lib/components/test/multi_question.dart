@@ -211,8 +211,9 @@ class _MultiQuestionState extends State<MultiQuestion> {
                   labelText: "Points",
                   focusNode: _pointsFocusNode,
                   initalValue: widget.createQuestionJson.isNotEmpty &&
-                          widget.createQuestionJson[widget.index - 1].points
-                              .isNotEmpty
+                          widget.createQuestionJson.length > widget.index - 1 &&
+                          widget.createQuestionJson[widget.index - 1]
+                              .question_title.isNotEmpty
                       ? widget.createQuestionJson[widget.index - 1].points
                       : '',
                   validator: (val) {

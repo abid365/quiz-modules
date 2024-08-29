@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:quiz/components/result/quiz_card_res.dart';
 import 'package:quiz/components/result/true_false_res.dart';
@@ -149,23 +151,34 @@ class _CheckBoxState extends State<CheckBox> {
         _results.add(answer);
       } else {
         selectedAnswers[answer.questionTitle] = answer.openEndedAnswer;
+        if (_results.last.questionTitle == answer.questionTitle) {
+          debugPrint('Skipping Duplicate');
+        } else {
+          _results.add(answer);
+        }
       }
     });
     debugPrint(
         'Question Title: ${answer.questionTitle}\nSelected option index: ${answer.selectedOption}\n');
   }
 
+  void openEndedAnswer(String questionTitle, String openEndedAns) {
+    debugPrint('title: $questionTitle\nanswer: $openEndedAns');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          // show result when answers are submitted
-          if (_isSubmit == true)
-            Expanded(
-              child: ListView.builder(
+      resizeToAvoidBottomInset: true,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // show result when answers are submitted
+            if (_isSubmit == true)
+              ListView.builder(
+                shrinkWrap: true,
                 scrollDirection: Axis.vertical,
-                physics: const AlwaysScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 controller: _scrollController,
                 itemCount: widget._questions.length,
                 itemBuilder: (context, index) {
@@ -191,6 +204,7 @@ class _CheckBoxState extends State<CheckBox> {
                               options: results.options,
                               onAnswerSelected: _handleSelectedAnswer,
                               type: results.type,
+                              selectedAnswersmap: selectedAnswers,
                             )
                           : QuizCardRes(
                               questionTitle: results.questionTitle,
@@ -204,15 +218,14 @@ class _CheckBoxState extends State<CheckBox> {
                               type: results.type,
                             );
                 },
-              ),
-            )
-          // Show Questions if the submit button is not clicked
-          else
-            Expanded(
-              child: ListView.builder(
+              )
+            // Show Questions if the submit button is not clicked
+            else
+              ListView.builder(
+                shrinkWrap: true,
                 scrollDirection: Axis.vertical,
-                physics: const AlwaysScrollableScrollPhysics(),
-                controller: _scrollController,
+                physics: const NeverScrollableScrollPhysics(),
+                // controller: _scrollController,
                 itemCount: widget._questions.length,
                 itemBuilder: (context, index) {
                   Question question = widget._questions[index];
@@ -236,6 +249,7 @@ class _CheckBoxState extends State<CheckBox> {
                               options: question.options,
                               onAnswerSelected: _handleSelectedAnswer,
                               type: question.type,
+                              selectedAnswersmap: selectedAnswers,
                             )
                           : QuizCard(
                               questionTitle: question.title,
@@ -249,11 +263,7 @@ class _CheckBoxState extends State<CheckBox> {
                             );
                 },
               ),
-            ),
-
-          Visibility(
-            visible: _showSubmissionActions == true ? true : false,
-            child: Column(
+            Column(
               children: [
                 const Padding(
                   padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
@@ -298,7 +308,8 @@ class _CheckBoxState extends State<CheckBox> {
                           ),
                         ),
                         onPressed: () {
-                          debugPrint("Hello");
+                          String json = jsonEncode('length:${_results.length}');
+                          debugPrint(json);
                           setState(() {
                             _isSubmit = !_isSubmit;
                           });
@@ -317,8 +328,8 @@ class _CheckBoxState extends State<CheckBox> {
                 )
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

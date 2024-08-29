@@ -31,6 +31,22 @@ class Answer {
     required this.options,
     required this.type,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': questionTitle,
+      'selected_option': selectedOption,
+      'open_ended': openEndedAnswer,
+      'isCorrect': isCorrect,
+      'options': options,
+      'type': type
+    };
+  }
+
+  @override
+  String toString() {
+    return '(question_title: $questionTitle, selected: $selectedOption, option: $options, openEnded: $openEndedAnswer, type: $type)';
+  }
 }
 
 class CreateQuestion {
