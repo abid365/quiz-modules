@@ -133,7 +133,7 @@ class _MultiQuestionState extends State<MultiQuestion> {
             borderRadius: BorderRadius.circular(14),
             color: const Color.fromARGB(51, 212, 212, 201),
           ),
-          margin: const EdgeInsets.fromLTRB(8, 8, 8, 60),
+          margin: const EdgeInsets.fromLTRB(8, 8, 8, 40),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 30, 16, 20),
             child: Column(
@@ -211,9 +211,8 @@ class _MultiQuestionState extends State<MultiQuestion> {
                   labelText: "Points",
                   focusNode: _pointsFocusNode,
                   initalValue: widget.createQuestionJson.isNotEmpty &&
-                          widget.createQuestionJson.length > widget.index - 1 &&
-                          widget.createQuestionJson[widget.index - 1]
-                              .question_title.isNotEmpty
+                          widget.createQuestionJson[widget.index - 1].points
+                              .isNotEmpty
                       ? widget.createQuestionJson[widget.index - 1].points
                       : '',
                   validator: (val) {
@@ -226,7 +225,8 @@ class _MultiQuestionState extends State<MultiQuestion> {
                     points = val!;
                   },
                   onChanged: (val) {
-                    if (widget.createQuestionJson.isEmpty) {
+                    if (widget.createQuestionJson.isEmpty ||
+                        widget.createQuestionJson.length < widget.index) {
                       return;
                     }
                     setState(() {
@@ -255,7 +255,8 @@ class _MultiQuestionState extends State<MultiQuestion> {
                     title = val!;
                   },
                   onChanged: (val) {
-                    if (widget.createQuestionJson.isEmpty) {
+                    if (widget.createQuestionJson.isEmpty ||
+                        widget.createQuestionJson.length < widget.index) {
                       return;
                     }
                     setState(() {

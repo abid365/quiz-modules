@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CustomFormFieldWithLabel extends StatelessWidget {
+class CustomFormFieldWithLabel extends StatefulWidget {
   final FocusNode focusNode;
   final String? hintText;
   final String labelText;
@@ -19,6 +19,34 @@ class CustomFormFieldWithLabel extends StatelessWidget {
       super.key});
 
   @override
+  State<CustomFormFieldWithLabel> createState() =>
+      _CustomFormFieldWithLabelState();
+}
+
+class _CustomFormFieldWithLabelState extends State<CustomFormFieldWithLabel> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initalValue);
+  }
+
+  @override
+  void didUpdateWidget(CustomFormFieldWithLabel oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initalValue != oldWidget.initalValue) {
+      _controller.text = widget.initalValue ?? '';
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.max,
@@ -28,7 +56,7 @@ class CustomFormFieldWithLabel extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                labelText,
+                widget.labelText,
                 style:
                     const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
@@ -38,8 +66,8 @@ class CustomFormFieldWithLabel extends StatelessWidget {
         SizedBox(
           height: 50,
           child: TextFormField(
-            focusNode: focusNode,
-            initialValue: initalValue,
+            focusNode: widget.focusNode,
+            controller: _controller,
             maxLines: 1,
             decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
@@ -71,9 +99,9 @@ class CustomFormFieldWithLabel extends StatelessWidget {
               ),
               errorStyle: const TextStyle(color: Colors.indigo),
             ),
-            validator: validator,
-            onSaved: onSaved,
-            onChanged: onChanged,
+            validator: widget.validator,
+            onSaved: widget.onSaved,
+            onChanged: widget.onChanged,
           ),
         ),
       ],

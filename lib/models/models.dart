@@ -75,7 +75,7 @@ class ApiResCreateQuestion {
 
   @override
   String toString() {
-    return 'ApiResCreateQuestion(question_title: $question_title, points: $points, option: $option, image:$image, type: $type, correct_answer: $correct_option)';
+    return 'ApiResCreateQuestion(question_title: $question_title, points: $points, option: $option, image:$image, type: $type, selected_answer: $correct_option)';
   }
 }
 

@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:quiz/components/test/multi_question.dart';
@@ -70,8 +71,36 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
     setState(() {
       final qIndex = _qlist[index];
       _qlist.remove(qIndex);
-      selectedAnswers.remove('Question$index');
-      experimentImages.remove('Question$index');
+      if (_qlist.length == index) {
+        selectedAnswers.remove('Question$index');
+        experimentImages.remove('Question$index');
+      } else {
+        selectedAnswers.remove('Question$index');
+        experimentImages.remove('Question$index');
+        Map<String, int> selectedAnswersUpdate = Map.fromEntries(
+          selectedAnswers.entries.toList().asMap().entries.map((indexedEntry) {
+            int index = indexedEntry.key;
+            MapEntry<String, int> entry = indexedEntry.value;
+            String newKey =
+                'Question${index + 1}'; // Add 1 if you want to start from 1
+            return MapEntry(newKey, entry.value);
+          }),
+        );
+        selectedAnswers = selectedAnswersUpdate;
+        Map<String, File> experimentImagesUpdate = Map.fromEntries(
+            experimentImages.entries
+                .toList()
+                .asMap()
+                .entries
+                .map((indexedEntry) {
+          int index = indexedEntry.key;
+          MapEntry<String, File> entry = indexedEntry.value;
+          String newKey = 'Question${index + 1}';
+          return MapEntry(newKey, entry.value);
+        }));
+        experimentImages = experimentImagesUpdate;
+      }
+
       if (createdQuestionJSON.length >= index) {
         createdQuestionJSON.removeAt(index - 1);
       }
@@ -240,7 +269,9 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
                         ),
                       ),
                       onPressed: () {
-                        debugPrint('$createdQuestionJSON');
+                        debugPrint('JSON: $createdQuestionJSON\n');
+                        debugPrint('Selected images: $experimentImages\n');
+                        debugPrint('Selected Answers: $selectedAnswers');
                       },
                       child: const Text(
                         "Submit",
