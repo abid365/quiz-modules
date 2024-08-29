@@ -133,7 +133,7 @@ class _MultiQuestionState extends State<MultiQuestion> {
             borderRadius: BorderRadius.circular(14),
             color: const Color.fromARGB(51, 212, 212, 201),
           ),
-          margin: const EdgeInsets.fromLTRB(8, 8, 8, 120),
+          margin: const EdgeInsets.fromLTRB(8, 8, 8, 60),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 30, 16, 20),
             child: Column(
