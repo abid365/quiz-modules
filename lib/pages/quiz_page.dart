@@ -151,6 +151,7 @@ class _CheckBoxState extends State<CheckBox> {
         _results.add(answer);
       } else {
         selectedAnswers[answer.questionTitle] = answer.openEndedAnswer;
+        _results.add(answer);
         if (_results.last.questionTitle == answer.questionTitle) {
           debugPrint('Skipping Duplicate');
         } else {
@@ -308,8 +309,11 @@ class _CheckBoxState extends State<CheckBox> {
                           ),
                         ),
                         onPressed: () {
-                          String json = jsonEncode('length:${_results.length}');
+                          String json =
+                              jsonEncode('results length:${_results.last}');
+
                           debugPrint(json);
+
                           setState(() {
                             _isSubmit = !_isSubmit;
                           });
