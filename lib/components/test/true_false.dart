@@ -10,6 +10,7 @@ class TrueFalse extends StatefulWidget {
   final String isCorrect;
   final List<String> options;
   final Function onAnswerSelected;
+  final Function clearSelection;
   final String? type;
 
   const TrueFalse({
@@ -21,6 +22,7 @@ class TrueFalse extends StatefulWidget {
     required this.isCorrect,
     required this.options,
     required this.onAnswerSelected,
+    required this.clearSelection,
     required this.type,
     super.key,
   });
@@ -32,16 +34,8 @@ class TrueFalse extends StatefulWidget {
 class _TrueFalseState extends State<TrueFalse> {
   int? selectedOptionIndex;
 
-  void clearSelections(question, ansIndex) {
-    if (widget.selectedIndex != null) {
-      widget.onAnswerSelected(Answer(
-          questionTitle: question,
-          selectedOption: null,
-          isCorrect: "",
-          options: [],
-          type: ""));
-      // _savedIndex[widget.selectedIndex!] = false;
-    }
+  void clearSelections(question, questionIndex) {
+    widget.clearSelection(question, questionIndex);
   }
 
   @override
@@ -121,7 +115,8 @@ class _TrueFalseState extends State<TrueFalse> {
                                   selectedOption: index,
                                   options: widget.options,
                                   isCorrect: widget.isCorrect,
-                                  type: widget.type),
+                                  type: widget.type,
+                                  index: widget.index),
                             );
 
                             // }
@@ -151,10 +146,11 @@ class _TrueFalseState extends State<TrueFalse> {
                               fontSize: 20, fontWeight: FontWeight.bold)),
                       child: const Text("Clear Selection"),
                       onPressed: () {
-                        setState(() {
-                          clearSelections(
-                              widget.questionTitle, widget.selectedIndex);
-                        });
+                        setState(
+                          () {
+                            clearSelections(widget.questionTitle, widget.index);
+                          },
+                        );
                       },
                     ),
                 ],

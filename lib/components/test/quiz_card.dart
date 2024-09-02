@@ -10,6 +10,8 @@ class QuizCard extends StatefulWidget {
   final String isCorrect;
   final List<String> options;
   final Function onAnswerSelected;
+  final Function clearSelection;
+  final Map<String, Object?> selectedAnswerMap;
   final String? type;
 
   const QuizCard({
@@ -21,7 +23,9 @@ class QuizCard extends StatefulWidget {
     required this.isCorrect,
     required this.options,
     required this.onAnswerSelected,
+    required this.clearSelection,
     required this.type,
+    required this.selectedAnswerMap,
     super.key,
   });
 
@@ -30,16 +34,8 @@ class QuizCard extends StatefulWidget {
 }
 
 class _QuizCardState extends State<QuizCard> {
-  void clearSelections(question, ansIndex) {
-    if (widget.selectedIndex != null) {
-      widget.onAnswerSelected(Answer(
-        questionTitle: question,
-        selectedOption: null,
-        isCorrect: "",
-        options: [],
-        type: "",
-      ));
-    }
+  void clearSelections(question, questionIndex) {
+    widget.clearSelection(question, questionIndex);
   }
 
   @override
@@ -119,7 +115,8 @@ class _QuizCardState extends State<QuizCard> {
                                   selectedOption: index,
                                   options: widget.options,
                                   isCorrect: widget.isCorrect,
-                                  type: widget.type),
+                                  type: widget.type,
+                                  index: widget.index),
                             );
 
                             // }
@@ -150,8 +147,8 @@ class _QuizCardState extends State<QuizCard> {
                       child: const Text("Clear Selection"),
                       onPressed: () {
                         setState(() {
-                          clearSelections(
-                              widget.questionTitle, widget.selectedIndex);
+                          clearSelections(widget.questionTitle, widget.index);
+                          // widget.selectedAnswerMap[widget.questionTitle] = null;
                         });
                       },
                     ),

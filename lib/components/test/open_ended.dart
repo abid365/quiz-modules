@@ -55,12 +55,12 @@ class _TrueFalseState extends State<OpenEnded> {
 
   void _updateAnswer(String answer) {
     widget.onAnswerSelected(Answer(
-      questionTitle: widget.questionTitle,
-      openEndedAnswer: answer,
-      options: [],
-      isCorrect: '',
-      type: widget.type,
-    ));
+        questionTitle: widget.questionTitle,
+        openEndedAnswer: answer,
+        options: [],
+        isCorrect: '',
+        type: widget.type,
+        index: widget.index));
     debugPrint(
         'title:${widget.questionTitle}\nanswer:${_openEndedAnswer.text}');
 
@@ -74,12 +74,12 @@ class _TrueFalseState extends State<OpenEnded> {
       _openEndedAnswer.clear();
       widget.selectedAnswersmap.remove('Question${widget.index}');
       widget.onAnswerSelected(Answer(
-        questionTitle: widget.questionTitle,
-        openEndedAnswer: '',
-        options: [],
-        isCorrect: "",
-        type: widget.type,
-      ));
+          questionTitle: widget.questionTitle,
+          openEndedAnswer: '',
+          options: [],
+          isCorrect: "",
+          type: widget.type,
+          index: widget.index));
     });
   }
 

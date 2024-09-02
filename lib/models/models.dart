@@ -16,21 +16,22 @@ class Question {
 }
 
 class Answer {
-  final String questionTitle;
-  final int? selectedOption;
-  final String? openEndedAnswer;
-  final String isCorrect;
-  final List<String> options;
-  final String? type;
+  String questionTitle;
+  int? selectedOption;
+  String? openEndedAnswer;
+  String isCorrect;
+  List<String> options;
+  String? type;
+  int index;
 
-  Answer({
-    required this.questionTitle,
-    this.selectedOption,
-    this.openEndedAnswer,
-    required this.isCorrect,
-    required this.options,
-    required this.type,
-  });
+  Answer(
+      {required this.questionTitle,
+      this.selectedOption,
+      this.openEndedAnswer,
+      required this.isCorrect,
+      required this.options,
+      required this.type,
+      required this.index});
 
   Map<String, dynamic> toJson() {
     return {
@@ -39,13 +40,14 @@ class Answer {
       'open_ended': openEndedAnswer,
       'isCorrect': isCorrect,
       'options': options,
-      'type': type
+      'type': type,
+      'index': index,
     };
   }
 
   @override
   String toString() {
-    return '(question_title: $questionTitle, selected: $selectedOption, option: $options, openEnded: $openEndedAnswer, type: $type)';
+    return '(question_title: $questionTitle, selected: $selectedOption, option: $options, openEnded: $openEndedAnswer, type: $type, index: $index)';
   }
 }
 

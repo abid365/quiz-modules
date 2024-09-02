@@ -91,12 +91,12 @@ class CheckBox extends StatefulWidget {
         ],
         correctAnswer: 'false',
         type: 'tf'),
-    Question(
-        title:
-            'What is the principle that states that the total electric charge in a closed system is constant?',
-        options: [],
-        correctAnswer: 'Conservation of Charge',
-        type: 'oe'),
+    // Question(
+    //     title:
+    //         'What is the principle that states that the total electric charge in a closed system is constant?',
+    //     options: [],
+    //     correctAnswer: 'Conservation of Charge',
+    //     type: 'oe'),
   ];
 
   // List<Answer> _answers = [];
@@ -110,7 +110,7 @@ class _CheckBoxState extends State<CheckBox> {
   bool _isSubmit = false;
 
   Map<String, Object?> selectedAnswers = {};
-  final List<Answer> _results = [];
+  List<Answer> result = [];
 
   final ScrollController _scrollController = ScrollController();
   bool _showSubmissionActions = false;
@@ -145,26 +145,40 @@ class _CheckBoxState extends State<CheckBox> {
 
   void _handleSelectedAnswer(Answer answer) {
     // if answer exists than find it and replace it with the new option index
-    setState(() {
-      if (answer.selectedOption != null) {
-        selectedAnswers[answer.questionTitle] = answer.selectedOption;
-        _results.add(answer);
-      } else {
-        selectedAnswers[answer.questionTitle] = answer.openEndedAnswer;
-        _results.add(answer);
-        if (_results.last.questionTitle == answer.questionTitle) {
-          debugPrint('Skipping Duplicate');
+    // debugPrint("Length:${result.length}");
+    setState(
+      () {
+        if (answer.selectedOption != null) {
+          selectedAnswers[answer.questionTitle] = answer.selectedOption;
+          // result.add(answer);
         } else {
-          _results.add(answer);
+          selectedAnswers[answer.questionTitle] = answer.openEndedAnswer;
+          // result.add(answer);
         }
-      }
-    });
+        if (result.isEmpty || result.length < answer.index) {
+          result.add(answer);
+        }
+        if (result[answer.index - 1].selectedOption != null) {
+          result[answer.index - 1].selectedOption = answer.selectedOption;
+        }
+        debugPrint("Length:${result.length}");
+      },
+    );
     debugPrint(
         'Question Title: ${answer.questionTitle}\nSelected option index: ${answer.selectedOption}\n');
   }
 
   void openEndedAnswer(String questionTitle, String openEndedAns) {
     debugPrint('title: $questionTitle\nanswer: $openEndedAns');
+  }
+
+  void handleClearSelection(questionTitle, index) {
+    debugPrint('title: $questionTitle, index: $index');
+    int realIndex = index - 1;
+    setState(() {
+      selectedAnswers[questionTitle] = null;
+      result.removeAt(realIndex);
+    });
   }
 
   @override
@@ -183,7 +197,7 @@ class _CheckBoxState extends State<CheckBox> {
                 controller: _scrollController,
                 itemCount: widget._questions.length,
                 itemBuilder: (context, index) {
-                  Answer results = _results[index];
+                  Answer results = result[index];
                   return results.type == 'tf'
                       ? TrueFalseRes(
                           questionTitle: results.questionTitle,
@@ -240,6 +254,7 @@ class _CheckBoxState extends State<CheckBox> {
                           options: question.options,
                           onAnswerSelected: _handleSelectedAnswer,
                           type: question.type,
+                          clearSelection: handleClearSelection,
                         )
                       : question.type == 'oe'
                           ? OpenEnded(
@@ -261,6 +276,8 @@ class _CheckBoxState extends State<CheckBox> {
                               options: question.options,
                               onAnswerSelected: _handleSelectedAnswer,
                               type: question.type,
+                              clearSelection: handleClearSelection,
+                              selectedAnswerMap: selectedAnswers,
                             );
                 },
               ),
@@ -309,8 +326,8 @@ class _CheckBoxState extends State<CheckBox> {
                           ),
                         ),
                         onPressed: () {
-                          String json =
-                              jsonEncode('results length:${_results.last}');
+                          String json = jsonEncode('result:${result}');
+                          debugPrint('result-length: ${result.length}');
 
                           debugPrint(json);
 
