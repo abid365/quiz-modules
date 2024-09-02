@@ -91,12 +91,12 @@ class CheckBox extends StatefulWidget {
         ],
         correctAnswer: 'false',
         type: 'tf'),
-    // Question(
-    //     title:
-    //         'What is the principle that states that the total electric charge in a closed system is constant?',
-    //     options: [],
-    //     correctAnswer: 'Conservation of Charge',
-    //     type: 'oe'),
+    Question(
+        title:
+            'What is the principle that states that the total electric charge in a closed system is constant?',
+        options: [],
+        correctAnswer: 'Conservation of Charge',
+        type: 'oe'),
   ];
 
   // List<Answer> _answers = [];
@@ -155,12 +155,33 @@ class _CheckBoxState extends State<CheckBox> {
           selectedAnswers[answer.questionTitle] = answer.openEndedAnswer;
           // result.add(answer);
         }
-        if (result.isEmpty || result.length < answer.index) {
+        // if (result.isEmpty || result.length < answer.index) {
+        //   result.add(answer);
+        // }
+        // if () {
+        // result[answer.index - 1].selectedOption = answer.selectedOption;
+
+        // }//
+        // bool answerExist =
+        //     result.any((item) => item.questionTitle == answer.questionTitle);
+        int index = result
+            .indexWhere((item) => item.questionTitle == answer.questionTitle);
+
+        debugPrint("Exist: $index");
+        if (index != -1 && result.isNotEmpty) {
+          debugPrint('Answer exist, updating selected index');
+          int index = result
+              .indexWhere((item) => item.questionTitle == answer.questionTitle);
+          if (result[index].type == 'oe') {
+            result[index].openEndedAnswer = answer.openEndedAnswer;
+          } else {
+            result[index].selectedOption = answer.selectedOption;
+          }
+        } else {
+          debugPrint('Answer does not exist, adding to the list');
           result.add(answer);
         }
-        if (result[answer.index - 1].selectedOption != null) {
-          result[answer.index - 1].selectedOption = answer.selectedOption;
-        }
+
         debugPrint("Length:${result.length}");
       },
     );
@@ -174,7 +195,9 @@ class _CheckBoxState extends State<CheckBox> {
 
   void handleClearSelection(questionTitle, index) {
     debugPrint('title: $questionTitle, index: $index');
-    int realIndex = index - 1;
+    // int realIndex = index - 1;
+    int realIndex =
+        result.indexWhere((item) => item.questionTitle == questionTitle);
     setState(() {
       selectedAnswers[questionTitle] = null;
       result.removeAt(realIndex);
@@ -195,7 +218,7 @@ class _CheckBoxState extends State<CheckBox> {
                 scrollDirection: Axis.vertical,
                 physics: const NeverScrollableScrollPhysics(),
                 controller: _scrollController,
-                itemCount: widget._questions.length,
+                itemCount: result.length,
                 itemBuilder: (context, index) {
                   Answer results = result[index];
                   return results.type == 'tf'
