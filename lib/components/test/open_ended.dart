@@ -9,6 +9,7 @@ class OpenEnded extends StatefulWidget {
   final List<String> options;
   final Function onAnswerSelected;
   final String? type;
+  final Function clearSelection;
   final Map<String, Object?> selectedAnswersmap;
 
   const OpenEnded({
@@ -18,6 +19,7 @@ class OpenEnded extends StatefulWidget {
     this.selectedIndex,
     required this.options,
     required this.onAnswerSelected,
+    required this.clearSelection,
     required this.type,
     required this.selectedAnswersmap,
     super.key,
@@ -69,18 +71,26 @@ class _TrueFalseState extends State<OpenEnded> {
     });
   }
 
-  void clearSelections() {
+  // void clearSelections() {
+  //   setState(() {
+  //     _openEndedAnswer.clear();
+  //     widget.selectedAnswersmap.remove('Question${widget.index}');
+  //     widget.onAnswerSelected(Answer(
+  //         questionTitle: widget.questionTitle,
+  //         openEndedAnswer: '',
+  //         options: [],
+  //         isCorrect: "",
+  //         type: widget.type,
+  //         index: widget.index));
+  //   });
+  // }
+
+  void clearSelections(question, questionIndex) {
     setState(() {
       _openEndedAnswer.clear();
       widget.selectedAnswersmap.remove('Question${widget.index}');
-      widget.onAnswerSelected(Answer(
-          questionTitle: widget.questionTitle,
-          openEndedAnswer: '',
-          options: [],
-          isCorrect: "",
-          type: widget.type,
-          index: widget.index));
     });
+    widget.clearSelection(question, questionIndex);
   }
 
   @override
@@ -88,7 +98,6 @@ class _TrueFalseState extends State<OpenEnded> {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
-
         _updateAnswer(_openEndedAnswer.text);
       },
       child: Center(
@@ -153,7 +162,9 @@ class _TrueFalseState extends State<OpenEnded> {
                         textStyle: const TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                      onPressed: clearSelections,
+                      onPressed: () {
+                        clearSelections(widget.questionTitle, widget.index);
+                      },
                       child: const Text("Clear Answer"),
                     ),
                   ],

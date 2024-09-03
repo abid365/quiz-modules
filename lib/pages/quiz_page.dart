@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:quiz/components/result/open_ended_eval.dart';
 import 'package:quiz/components/result/quiz_card_res.dart';
 import 'package:quiz/components/result/true_false_res.dart';
 import 'package:quiz/components/test/open_ended.dart';
@@ -233,16 +234,14 @@ class _CheckBoxState extends State<CheckBox> {
                           type: results.type,
                         )
                       : results.type == 'oe'
-                          ? OpenEnded(
+                          ? OpenEndedEval(
                               questionTitle: results.questionTitle,
                               point: 1,
-                              index: index + 1,
-                              selectedIndex:
-                                  selectedAnswers[results.questionTitle],
-                              options: results.options,
-                              onAnswerSelected: _handleSelectedAnswer,
+                              index: results.index,
+                              questionId: "1",
+                              imageUrl: "",
                               type: results.type,
-                              selectedAnswersmap: selectedAnswers,
+                              openEndedAnswer: results.openEndedAnswer,
                             )
                           : QuizCardRes(
                               questionTitle: results.questionTitle,
@@ -289,6 +288,7 @@ class _CheckBoxState extends State<CheckBox> {
                               onAnswerSelected: _handleSelectedAnswer,
                               type: question.type,
                               selectedAnswersmap: selectedAnswers,
+                              clearSelection: handleClearSelection,
                             )
                           : QuizCard(
                               questionTitle: question.title,
